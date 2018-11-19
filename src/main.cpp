@@ -1,12 +1,13 @@
 #include <Arduino.h>
-// #include <Wire.h>
-#include "I2Cdev.h"
 #include <AccelStepper.h>
 #include <AFMotor.h>
-#include "MPU6050_6Axis_MotionApps20.h"
 #include <PID_v1.h>
 
+#include "I2Cdev.h"
+#include "MPU6050_6Axis_MotionApps20.h"
+
 #define SLAVE_ADDRESS 0x04
+
 int number = 0;
 int state = 0;
 void receiveData(int byteCount);
@@ -41,6 +42,7 @@ double roll = 0;
 // ================================================================
 // ===                          PID STUFF                       ===
 // ================================================================
+
 //Define Variables we'll be connecting to
 double Setpoint, Output, Input;
 int kp = 30;
@@ -65,19 +67,21 @@ void dmpDataReady() {
 // ================================================================
 // ===               Motor Config                                ===
 // ================================================================
+
 // two stepper motors one on each port
 AF_Stepper motor1(200, 1);
 AF_Stepper motor2(200, 2);
 
 // you can change these to DOUBLE or INTERLEAVE or MICROSTEP!
-// wrappers for the first motor!
+// wrappers for the first motor
 void forwardstep1() {
   motor1.onestep(FORWARD, SINGLE);
 }
 void backwardstep1() {
   motor1.onestep(BACKWARD, SINGLE);
 }
-// wrappers for the second motor!
+
+// wrappers for the second motor
 void forwardstep2() {
   motor2.onestep(FORWARD, SINGLE);
 }
@@ -93,7 +97,8 @@ AccelStepper stepper2(forwardstep2, backwardstep2);
 // ===                      INITIAL SETUP                       ===
 // ================================================================
 void setup() {
-  // join I2C bus (I2Cdev library doesn't do this automatically)
+
+  // join I2C bus
   #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
     Wire.begin(SLAVE_ADDRESS);
     Wire.onReceive(receiveData);
